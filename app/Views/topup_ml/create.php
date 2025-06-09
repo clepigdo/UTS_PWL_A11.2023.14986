@@ -84,120 +84,57 @@
             </div>
 
             <div class="container">
-                <div class="container my-5">
-                    <div id="topupCarousel" class="carousel slide" data-bs-ride="carousel">
-
-                        <!-- Titik Navigasi -->
-                        <div class="carousel-indicators mb-4">
-                            <button type="button" data-bs-target="#topupCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#topupCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#topupCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                        </div>
-
-                        <div class="carousel-inner position-relative">
-
-                            <!-- Slide 1 -->
-                            <div class="carousel-item active">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 1">
-                            </div>
-
-                            <!-- Slide 2 -->
-                            <div class="carousel-item">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 2">
-                            </div>
-
-                            <!-- Slide 3 -->
-                            <div class="carousel-item">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 3">
-                            </div>
-
-                            <!-- Tombol Geser Kiri -->
-                            <button class="carousel-control-prev inside-control" type="button" data-bs-target="#topupCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            </button>
-
-                            <!-- Tombol Geser Kanan -->
-                            <button class="carousel-control-next inside-control" type="button" data-bs-target="#topupCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            </button>
-
-                        </div>
-
-                    </div>
-                </div>
-
                 <div class="container py-5">
+                    <div class="card bg-dark text-white shadow-lg p-4" style="max-width: 600px; margin: auto; border-radius: 15px;">
+                        <h3 class="text-center mb-4">Top-Up Mobile Legends</h3>
 
-                    <!-- TABS -->
-                    <div class="d-flex justify-content-center mb-4">
-                        <button class="tab-btn active">★ Favorite</button>
-                        <button class="tab-btn">🎮 Games</button>
-                        <button class="tab-btn">🎟 Voucher</button>
-                        <button class="tab-btn">✨ Others</button>
+                        <form action="<?= base_url('topup_ml/store') ?>" method="post">
+                            <?= csrf_field() ?>
+
+                            <!-- User ID -->
+                            <div class="mb-3">
+                                <label for="user_id" class="form-label">User ID</label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" id="user_id" name="user_id" placeholder="Masukkan User ID" required>
+                            </div>
+
+                            <!-- Server ID -->
+                            <div class="mb-3">
+                                <label for="server_id" class="form-label">Server ID</label>
+                                <input type="text" class="form-control bg-dark text-white border-secondary" id="server_id" name="server_id" placeholder="Masukkan Server ID" required>
+                            </div>
+
+                            <!-- Nominal -->
+                            <div class="mb-3">
+                                <label for="nominal" class="form-label">Pilih Nominal</label>
+                                <select class="form-select bg-dark text-white border-secondary" id="nominal" name="nominal" required>
+                                    <option value="" disabled selected>-- Pilih Nominal --</option>
+                                    <option value="86">86 Diamonds</option>
+                                    <option value="172">172 Diamonds</option>
+                                    <option value="257">257 Diamonds</option>
+                                    <option value="344">344 Diamonds</option>
+                                    <option value="429">429 Diamonds</option>
+                                </select>
+                            </div>
+
+                            <!-- Metode Pembayaran -->
+                            <div class="mb-4">
+                                <label for="metode_pembayaran" class="form-label">Metode Pembayaran</label>
+                                <select class="form-select bg-dark text-white border-secondary" id="metode_pembayaran" name="metode_pembayaran" required>
+                                    <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
+                                    <option value="Dana">DANA</option>
+                                    <option value="OVO">OVO</option>
+                                    <option value="Gopay">GoPay</option>
+                                    <option value="ShopeePay">ShopeePay</option>
+                                    <option value="Transfer Bank">Transfer Bank</option>
+                                </select>
+                            </div>
+
+                            <!-- Tombol Submit -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-warning fw-bold">Top-Up Sekarang</button>
+                            </div>
+                        </form>
                     </div>
-
-                    <!-- GAME CARDS -->
-                    <div class="row g-4">
-                        <div class="col-6 col-md-3">
-                            <a href="<?= base_url() ?>/topup_ml/index" class="text-decoration-none">
-                                <div class="game-card">
-                                    <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
-                                    <div class="text-white game-title">Mobile Legends ID</div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Honor of Kings">
-                                <div class="text-white game-title">Honor of Kings</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends MY">
-                                <div class="text-white game-title">Mobile Legends MY</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Free Fire">
-                                <div class="text-white game-title">Free Fire</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-4 mt-2">
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
-                                <div class="text-white game-title">Mobile Legends ID</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Honor of Kings">
-                                <div class="text-white game-title">Honor of Kings</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends MY">
-                                <div class="text-white game-title">Mobile Legends MY</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Free Fire">
-                                <div class="text-white game-title">Free Fire</div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
                 <!-- Custom CSS -->

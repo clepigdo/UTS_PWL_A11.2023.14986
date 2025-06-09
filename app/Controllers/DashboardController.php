@@ -37,7 +37,7 @@ class DashboardController extends BaseController
     public function dashboard()
     {
         $role = session()->get('role');
-        $uri  = service('uri')->getSegment(1); // Ambil 'admin' atau 'user'
+        $uri  = service('uri')->getSegment(1); 
 
         if ($role === 'admin' && $uri !== 'admin') {
             return redirect()->to('/admin/dashboard');

@@ -84,120 +84,57 @@
             </div>
 
             <div class="container">
-                <div class="container my-5">
-                    <div id="topupCarousel" class="carousel slide" data-bs-ride="carousel">
-
-                        <!-- Titik Navigasi -->
-                        <div class="carousel-indicators mb-4">
-                            <button type="button" data-bs-target="#topupCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#topupCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#topupCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                        </div>
-
-                        <div class="carousel-inner position-relative">
-
-                            <!-- Slide 1 -->
-                            <div class="carousel-item active">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 1">
-                            </div>
-
-                            <!-- Slide 2 -->
-                            <div class="carousel-item">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 2">
-                            </div>
-
-                            <!-- Slide 3 -->
-                            <div class="carousel-item">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 3">
-                            </div>
-
-                            <!-- Tombol Geser Kiri -->
-                            <button class="carousel-control-prev inside-control" type="button" data-bs-target="#topupCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            </button>
-
-                            <!-- Tombol Geser Kanan -->
-                            <button class="carousel-control-next inside-control" type="button" data-bs-target="#topupCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            </button>
-
-                        </div>
-
-                    </div>
-                </div>
-
                 <div class="container py-5">
-
-                    <!-- TABS -->
-                    <div class="d-flex justify-content-center mb-4">
-                        <button class="tab-btn active">★ Favorite</button>
-                        <button class="tab-btn">🎮 Games</button>
-                        <button class="tab-btn">🎟 Voucher</button>
-                        <button class="tab-btn">✨ Others</button>
-                    </div>
-
-                    <!-- GAME CARDS -->
-                    <div class="row g-4">
-                        <div class="col-6 col-md-3">
-                            <a href="<?= base_url() ?>/topup_ml/index" class="text-decoration-none">
-                                <div class="game-card">
-                                    <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
-                                    <div class="text-white game-title">Mobile Legends ID</div>
-                                </div>
-                            </a>
+                    <div class="card bg-dark text-white shadow-lg p-4" style="border-radius: 15px;">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="mb-0">Daftar Top-Up Mobile Legends</h3>
+                            <a href="<?= base_url('topup_ml/create') ?>" class="btn btn-warning fw-bold">+ Tambah Top-Up</a>
                         </div>
 
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Honor of Kings">
-                                <div class="text-white game-title">Honor of Kings</div>
-                            </div>
-                        </div>
+                        <?php if (session()->getFlashdata('success')) : ?>
+                            <div class="alert alert-success" style="color:black; font-weight:bold;"><?= session()->getFlashdata('success') ?></div>
+                        <?php endif; ?>
 
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends MY">
-                                <div class="text-white game-title">Mobile Legends MY</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Free Fire">
-                                <div class="text-white game-title">Free Fire</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-4 mt-2">
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
-                                <div class="text-white game-title">Mobile Legends ID</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Honor of Kings">
-                                <div class="text-white game-title">Honor of Kings</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends MY">
-                                <div class="text-white game-title">Mobile Legends MY</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3 ">
-                            <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Free Fire">
-                                <div class="text-white game-title">Free Fire</div>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover table-bordered align-middle">
+                                <thead class="table-secondary text-dark">
+                                    <tr class="text-center">
+                                        <th>No</th>
+                                        <th>User ID</th>
+                                        <th>Server ID</th>
+                                        <th>Nominal</th>
+                                        <th>Metode Pembayaran</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (count($topups) > 0): ?>
+                                        <?php $no = 1;
+                                        foreach ($topups as $topup): ?>
+                                            <tr class="text-center">
+                                                <td><?= $no++ ?></td>
+                                                <td><?= esc($topup['user_id']) ?></td>
+                                                <td><?= esc($topup['server_id']) ?></td>
+                                                <td><?= esc($topup['nominal']) ?> Diamonds</td>
+                                                <td><?= esc($topup['metode_pembayaran']) ?></td>
+                                                <td>
+                                                    <a href="<?= base_url('topup_ml/edit/' . $topup['id']) ?>" class="btn btn-sm btn-success">Edit</a>
+                                                    <form action="<?= base_url('topup_ml/delete/' . $topup['id']) ?>" method="post" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?');">
+                                                        <?= csrf_field() ?>
+                                                        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="6" class="text-center">Belum ada data top-up.</td>
+                                        </tr>
+                                    <?php endif ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Custom CSS -->
