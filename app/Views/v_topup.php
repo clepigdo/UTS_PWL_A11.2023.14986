@@ -142,7 +142,7 @@
                             <a href="<?= base_url() ?>/topup_ml/index" class="text-decoration-none">
                                 <div class="game-card">
                                     <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
-                                    <div class="text-white game-title">Mobile Legends ID</div>
+                                    <div class="text-white game-title">MOBILE LEGENDS</div>
                                 </div>
                             </a>
                         </div>
@@ -150,21 +150,21 @@
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
                                 <img src="<?= base_url() ?>/images/valo1.jpg" alt="Honor of Kings">
-                                <div class="text-white game-title">Honor of Kings</div>
+                                <div class="text-white game-title">PUBG MOBILE</div>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
                                 <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends MY">
-                                <div class="text-white game-title">Mobile Legends MY</div>
+                                <div class="text-white game-title">VALORANT</div>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
                                 <img src="<?= base_url() ?>/images/valo1.jpg" alt="Free Fire">
-                                <div class="text-white game-title">Free Fire</div>
+                                <div class="text-white game-title">ROBLOX</div>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
                                 <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
-                                <div class="text-white game-title">Mobile Legends ID</div>
+                                <div class="text-white game-title">POINT BLANK</div>
                             </div>
                         </div>
 

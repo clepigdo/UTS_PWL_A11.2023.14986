@@ -84,61 +84,154 @@
             </div>
 
             <div class="container">
-                <div class="container py-5">
-                    <div class="card bg-dark text-white shadow-lg p-4" style="max-width: 600px; margin: auto; border-radius: 15px;">
-                        <h3 class="text-center mb-4">Top-Up Mobile Legends</h3>
+                <div class="page-inner">
+                    <div class="card bg-dark text-white shadow-lg p-3 p-md-4" style="border-radius: 15px;">
+                        <div class="card-body">
+                            <h3 class="text-center mb-4 text-warning">Top-Up Mobile Legends</h3>
 
-                        <form action="<?= base_url('topup_ml/store') ?>" method="post">
-                            <?= csrf_field() ?>
-
-                            <!-- User ID -->
-                            <div class="mb-3">
-                                <label for="user_id" class="form-label">User ID</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="user_id" name="user_id" placeholder="Masukkan User ID" required>
+                            <h5 class="mb-3">1. Pilih Nominal</h5>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4">
+                                    <div class="diamond-card text-center" data-nominal-value="86" data-nominal-text="86 Diamonds" data-harga="22000">
+                                        <div class="fw-bold">86 Diamonds</div>
+                                        <div class="text-white-50 small">78 + 8 Bonus</div>
+                                        <div class="price-badge mt-2">Rp 22.000</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="diamond-card text-center" data-nominal-value="172" data-nominal-text="172 Diamonds" data-harga="44000">
+                                        <div class="fw-bold">172 Diamonds</div>
+                                        <div class="text-white-50 small">156 + 16 Bonus</div>
+                                        <div class="price-badge mt-2">Rp 44.000</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="diamond-card text-center" data-nominal-value="257" data-nominal-text="257 Diamonds" data-harga="66000">
+                                        <div class="fw-bold">257 Diamonds</div>
+                                        <div class="text-white-50 small">234 + 23 Bonus</div>
+                                        <div class="price-badge mt-2">Rp 66.000</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="diamond-card text-center" data-nominal-value="344" data-nominal-text="344 Diamonds" data-harga="88000">
+                                        <div class="fw-bold">344 Diamonds</div>
+                                        <div class="text-white-50 small">312 + 32 Bonus</div>
+                                        <div class="price-badge mt-2">Rp 88.000</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="diamond-card text-center" data-nominal-value="429" data-nominal-text="429 Diamonds" data-harga="110000">
+                                        <div class="fw-bold">429 Diamonds</div>
+                                        <div class="text-white-50 small">395 + 34 Bonus</div>
+                                        <div class="price-badge mt-2">Rp 110.000</div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Server ID -->
-                            <div class="mb-3">
-                                <label for="server_id" class="form-label">Server ID</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="server_id" name="server_id" placeholder="Masukkan Server ID" required>
-                            </div>
+                            <div id="form-section" class="mt-4" style="display: none;">
+                                <hr class="border-secondary">
+                                <hr class="border-secondary">
 
-                            <!-- Nominal -->
-                            <div class="mb-3">
-                                <label for="nominal" class="form-label">Pilih Nominal</label>
-                                <select class="form-select bg-dark text-white border-secondary" id="nominal" name="nominal" required>
-                                    <option value="" disabled selected>-- Pilih Nominal --</option>
-                                    <option value="86">86 Diamonds</option>
-                                    <option value="172">172 Diamonds</option>
-                                    <option value="257">257 Diamonds</option>
-                                    <option value="344">344 Diamonds</option>
-                                    <option value="429">429 Diamonds</option>
-                                </select>
-                            </div>
+                                <div id="selection-summary" class="p-3 mb-4" style="background-color: #495057; border-left: 5px solid #ffc107; border-radius: 6px;">
+                                    <h6 class="text-warning mb-2">Ringkasan Pesanan</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-white-50">Item:</span>
+                                        <span id="summary-nominal" class="fw-bold">-- Belum Dipilih --</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <span class="text-white-50">Harga:</span>
+                                        <span id="summary-harga" class="fw-bold">--</span>
+                                    </div>
+                                </div>
+                                <form action="<?= base_url('topup_ml/store') ?>" method="post">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" id="selected-nominal" name="nominal">
 
-                            <!-- Metode Pembayaran -->
-                            <div class="mb-4">
-                                <label for="metode_pembayaran" class="form-label">Metode Pembayaran</label>
-                                <select class="form-select bg-dark text-white border-secondary" id="metode_pembayaran" name="metode_pembayaran" required>
-                                    <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
-                                    <option value="Dana">DANA</option>
-                                    <option value="OVO">OVO</option>
-                                    <option value="Gopay">GoPay</option>
-                                    <option value="ShopeePay">ShopeePay</option>
-                                    <option value="Transfer Bank">Transfer Bank</option>
-                                </select>
-                            </div>
+                                    <h5 class="mb-3 mt-4">2. Lengkapi Data</h5>
+                                    <div class="mb-3">
+                                        <label for="user_id" class="form-label">User ID</label>
+                                        <input type="text" class="form-control bg-dark text-white border-secondary" id="user_id" name="user_id" placeholder="Masukkan User ID" required>
+                                    </div>
 
-                            <!-- Tombol Submit -->
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-warning fw-bold">Top-Up Sekarang</button>
+                                    <div class="mb-3">
+                                        <label for="server_id" class="form-label">Server ID</label>
+                                        <input type="text" class="form-control bg-dark text-white border-secondary" id="server_id" name="server_id" placeholder="Masukkan Server ID (4-5 digit)" required>
+                                    </div>
+
+                                    <h5 class="mb-3 mt-4">3. Pilih Pembayaran</h5>
+                                    <input type="hidden" id="metode_pembayaran" name="metode_pembayaran" value="">
+
+                                    <div id="payment-selection-grid" class="row g-3">
+                                        <?php if (!empty($daftar_pembayaran)): ?>
+                                            <?php foreach ($daftar_pembayaran as $kode => $details): ?>
+                                                <div class="col-6">
+                                                    <div class="payment-card" data-payment-code="<?= esc($kode) ?>">
+                                                        <?php if (isset($details['label'])): ?>
+                                                            <span class="payment-label"><?= esc($details['label']) ?></span>
+                                                        <?php endif; ?>
+                                                        <div class="d-flex align-items-center">
+                                                            <img src="<?= base_url('images/payments/' . esc($details['logo'])) ?>" class="payment-logo" alt="<?= esc($details['nama']) ?>">
+                                                            <span class="payment-name ms-2"><?= esc($details['nama']) ?></span>
+                                                        </div>
+                                                        <div class="payment-price fw-bold text-end">--</div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-warning fw-bold">Top-Up Sekarang</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Custom CSS -->
                 <style>
+                    .payment-card {
+                        border: 2px solid #4a5568;
+                        background-color: #343a40;
+                        border-radius: 0.5rem;
+                        padding: 0.75rem 1rem;
+                        cursor: pointer;
+                        transition: all 0.2s ease-in-out;
+                        position: relative;
+                    }
+
+                    .payment-card:hover {
+                        transform: translateY(-3px);
+                        border-color: #6c757d;
+                    }
+
+                    .payment-card.selected {
+                        border-color: #ffc107;
+                        background-color: #495057;
+                        box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+                    }
+
+                    .payment-logo {
+                        height: 20px;
+                        width: auto;
+                    }
+
+                    .payment-price {
+                        font-size: 0.95rem;
+                    }
+
+                    .payment-label {
+                        position: absolute;
+                        top: -10px;
+                        right: 10px;
+                        background-color: #dc3545;
+                        color: white;
+                        font-size: 0.7rem;
+                        padding: 2px 6px;
+                        border-radius: 4px;
+                    }
+
                     /* Container Carousel */
                     #topupCarousel .carousel-inner {
                         overflow: visible;
@@ -236,6 +329,85 @@
         <script src="<?= base_url() ?>kaiadmin/assets/js/setting-demo.js"></script>
         <script src="<?= base_url() ?>kaiadmin/assets/js/demo.js"></script>
         <script>
+            $(document).ready(function() {
+                // === Variabel Elemen ===
+                const $diamondCards = $('.diamond-card');
+                const $paymentCards = $('.payment-card');
+                const $hiddenNominalInput = $('#selected-nominal');
+                const $hiddenPaymentInput = $('#metode_pembayaran');
+                const $summaryNominal = $('#summary-nominal');
+                const $summaryHarga = $('#summary-harga');
+                const $formSection = $('#form-section');
+
+                const PPN_RATE = 0.11; // Pajak 11%
+
+                // === Fungsi Utama ===
+                function updateSelection(cardElement) {
+                    const $card = $(cardElement);
+                    $diamondCards.removeClass('selected');
+                    $card.addClass('selected');
+                    console.log("Nilai mentah dari data-harga:", $card.data('harga'));
+
+                    const nominalValue = $card.data('nominal-value');
+                    const nominalText = $card.data('nominal-text');
+                    const hargaDasar = parseFloat($card.data('harga'));
+
+                    // Hitung harga termasuk PPN
+                    const hargaDenganPpn = Math.round(hargaDasar * (1 + PPN_RATE));
+
+                    // Update input tersembunyi untuk form
+                    $hiddenNominalInput.val(nominalValue);
+
+                    // Update Ringkasan Pesanan (jika ada)
+                    if ($summaryNominal.length) {
+                        $summaryNominal.text(nominalText);
+                        $summaryHarga.text('Rp ' + formatRupiah(hargaDasar));
+                    }
+
+                    // Update harga di semua kartu pembayaran
+                    $('.payment-price').text('Rp ' + formatRupiah(hargaDenganPpn));
+
+                    // Tampilkan form jika tersembunyi (untuk halaman Create)
+                    if ($formSection.length && $formSection.is(':hidden')) {
+                        $formSection.slideDown('fast');
+                    }
+                }
+
+                function selectPayment(cardElement) {
+                    const $card = $(cardElement);
+                    $paymentCards.removeClass('selected');
+                    $card.addClass('selected');
+
+                    const paymentCode = $card.data('payment-code');
+                    $hiddenPaymentInput.val(paymentCode);
+                }
+
+                function formatRupiah(angka) {
+                    return new Intl.NumberFormat('id-ID').format(angka);
+                }
+
+                // === Event Handlers ===
+                $diamondCards.on('click', function() {
+                    updateSelection(this);
+                });
+
+                $paymentCards.on('click', function() {
+                    selectPayment(this);
+                });
+
+                // === Inisialisasi untuk Halaman Edit ===
+                const initiallySelectedCard = $('.diamond-card.selected');
+                if (initiallySelectedCard.length > 0) {
+                    updateSelection(initiallySelectedCard);
+                }
+
+                // Pilih metode pembayaran yang sudah tersimpan di halaman edit
+                const savedPaymentMethod = "<?= $topup['metode_pembayaran'] ?? '' ?>";
+                if (savedPaymentMethod) {
+                    $hiddenPaymentInput.val(savedPaymentMethod);
+                    $('.payment-card[data-payment-code="' + savedPaymentMethod + '"]').addClass('selected');
+                }
+            });
             $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
                 type: "line",
                 height: "70",

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\TopupModel;
 
 class DashboardController extends BaseController
 {
@@ -37,7 +38,7 @@ class DashboardController extends BaseController
     public function dashboard()
     {
         $role = session()->get('role');
-        $uri  = service('uri')->getSegment(1); 
+        $uri  = service('uri')->getSegment(1);
 
         if ($role === 'admin' && $uri !== 'admin') {
             return redirect()->to('/admin/dashboard');
@@ -98,11 +99,31 @@ class DashboardController extends BaseController
             return redirect()->to('/user/riwayat_pemesanan');
         }
 
+        // 1. Inisialisasi Model
+        $topupModel = new TopupModel();
+
+        // 2. Siapkan data dasar
         $data = [
             'title'    => 'Riwayat Pemesanan',
             'username' => session()->get('username'),
             'role'     => $role,
         ];
+
+        // 3. Ambil data pesanan berdasarkan role
+        if ($role === 'admin') {
+            // Jika admin, tampilkan semua pesanan
+            $data['orders'] = $topupModel->orderBy('created_at', 'DESC')->findAll();
+        } else {
+            // Jika user, tampilkan hanya pesanannya sendiri
+            // ASUMSI: Anda punya 'user_id' di session yang cocok dengan kolom di tabel pesanan
+            $userId = session()->get('id_user'); // Sesuaikan nama session ID Anda
+            $data['orders'] = $topupModel->where('user_id_pembeli', $userId) // Sesuaikan nama kolom
+                ->orderBy('created_at', 'DESC')
+                ->findAll();
+        }
+    
+
+        // Kirim semua data (termasuk data pesanan) ke view
         return view('v_riwayat', $data);
     }
 

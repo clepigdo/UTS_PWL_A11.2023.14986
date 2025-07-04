@@ -84,81 +84,37 @@
             </div>
 
             <div class="container">
-                <div class="container py-5">
-                    <div class="card bg-dark text-white shadow-lg p-4" style="border-radius: 15px;">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h3 class="mb-0">Daftar Top-Up Mobile Legends</h3>
-                            <a href="<?= base_url('topup_ml/create') ?>" class="btn btn-warning fw-bold">+ Tambah Top-Up</a>
-                        </div>
+                <div class="page-inner">
+                    <div class="card bg-dark text-white shadow-lg p-3 p-md-4 mx-auto" style="max-width: 700px; border-radius: 15px;">
+                        <div class="card-body">
+                            <h3 class="text-center mb-4 text-warning">Konfirmasi Pembayaran</h3>
 
-                        <?php if (session()->getFlashdata('success')) : ?>
-                            <div class="alert alert-success" style="color:black; font-weight:bold;"><?= session()->getFlashdata('success') ?></div>
-                        <?php endif; ?>
+                            <div class="p-3 mb-4" style="background-color: #495057; border-radius: 8px;">
+                                <h6 class="text-white mb-3">Detail Pesanan</h6>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-white-50">Order ID:</span>
+                                    <span class="fw-bold"><?= 'CLEP-' . esc($pesanan['id']) ?></span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-white-50">Item:</span>
+                                    <span class="fw-bold"><?= esc($pesanan['nominal']) ?> Diamonds</span>
+                                </div>
+                                <hr class="border-secondary">
+                                <div class="d-flex justify-content-between fs-5">
+                                    <span class="text-white-50">Total Bayar (termasuk PPN 11%):</span>
+                                    <span class="fw-bold text-warning">Rp <?= number_format($harga_akhir, 0, ',', '.') ?></span>
+                                </div>
+                            </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover table-bordered align-middle">
-                                <thead class="table-secondary text-dark">
-                                    <tr class="text-center">
-                                        <th>No</th>
-                                        <th>User ID</th>
-                                        <th>Server ID</th>
-                                        <th>Nominal</th>
-                                        <th>Harga</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (count($topups) > 0): ?>
-                                        <?php $no = 1;
-                                        foreach ($topups as $topup): ?>
-                                            <?php
-                                            // Logika untuk menentukan warna & teks status
-                                            $statusClass = '';
-                                            $statusText = '';
-                                            switch ($topup['status_pembayaran']) {
-                                                case 'paid':
-                                                case 'settlement':
-                                                    $statusClass = 'bg-success';
-                                                    $statusText = 'Sukses';
-                                                    break;
-                                                case 'pending':
-                                                    $statusClass = 'bg-warning text-dark';
-                                                    $statusText = 'Pending';
-                                                    break;
-                                                default:
-                                                    $statusClass = 'bg-danger';
-                                                    $statusText = 'Gagal';
-                                            }
-                                            ?>
-                                            <tr class="text-center">
-                                                <td><?= $no++ ?></td>
-                                                <td><?= esc($topup['user_id']) ?></td>
-                                                <td><?= esc($topup['server_id']) ?></td>
-                                                <td><?= esc($topup['nominal']) ?> Diamonds</td>
-                                                <td>Rp <?= number_format($topup['harga'], 0, ',', '.') ?></td>
-                                                <td><?= esc($topup['metode_pembayaran']) ?></td>
+                            <div class="d-grid mt-4">
+                                <button id="tombol-bayar" class="btn btn-warning fw-bold fs-5 py-2">
+                                    LANJUTKAN KE PEMBAYARAN
+                                </button>
+                            </div>
+                            <div class="text-center mt-3">
+                                <small class="text-white-50">Dengan melanjutkan, Anda setuju dengan Syarat & Ketentuan kami. Pembayaran aman dan terenkripsi oleh Midtrans.</small>
+                            </div>
 
-                                                <td>
-                                                    <span class="badge <?= $statusClass ?>"><?= $statusText ?></span>
-                                                </td>
-                                                <td>
-                                                    <a href="<?= base_url('topup_ml/edit/' . $topup['id']) ?>" class="btn btn-sm btn-success">Edit</a>
-                                                    <form action="<?= base_url('topup_ml/delete/' . $topup['id']) ?>" method="post" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?');">
-                                                        <?= csrf_field() ?>
-                                                        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="8" class="text-center">Belum ada data top-up.</td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -261,7 +217,93 @@
         <!-- Kaiadmin DEMO methods, don't include it in your project! -->
         <script src="<?= base_url() ?>kaiadmin/assets/js/setting-demo.js"></script>
         <script src="<?= base_url() ?>kaiadmin/assets/js/demo.js"></script>
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="<?= getenv('MIDTRANS_CLIENT_KEY') ?>"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // 2. Ambil Snap Token yang sudah kita buat di controller
+                const snapToken = "<?= esc($token) ?>";
+                const $tombolBayar = $('#tombol-bayar');
+
+                // Pastikan token ada sebelum mengaktifkan tombol
+                if (snapToken) {
+                    $tombolBayar.prop('disabled', false);
+                } else {
+                    $tombolBayar.prop('disabled', true).text('Terjadi Kesalahan');
+                }
+
+                // 3. Tambahkan event handler untuk tombol bayar
+                $tombolBayar.on('click', function(e) {
+                    e.preventDefault();
+
+                    // 4. Panggil jendela pembayaran Midtrans Snap
+                    snap.pay(snapToken, {
+                        onSuccess: function(result) {
+                            /* Pengguna berhasil menyelesaikan pembayaran */
+                            console.log('SUCCESS', result);
+                            alert("Pembayaran Berhasil!");
+                            // Arahkan ke halaman histori atau status pesanan
+                            window.location.href = "<?= base_url('/admin/riwayat_pemesanan') ?>";
+                        },
+                        onPending: function(result) {
+                            /* Menunggu pembayaran (misal: transfer bank) */
+                            console.log('PENDING', result);
+                            alert("Menunggu pembayaran Anda!");
+                            window.location.href = "<?= base_url('/admin/riwayat_pemesanan') ?>";
+                        },
+                        onError: function(result) {
+                            /* Terjadi error saat pembayaran */
+                            console.log('ERROR', result);
+                            alert("Pembayaran Gagal!");
+                        },
+                        onClose: function() {
+                            /* Pengguna menutup pop-up tanpa menyelesaikan pembayaran */
+                            console.log('Pop-up pembayaran ditutup.');
+                            // Anda bisa memberikan notifikasi lembut di sini jika perlu
+                        }
+                    });
+                });
+            });
+        </script>
         <script>
+            // Ganti seluruh script lama Anda dengan yang ini
+            $(document).ready(function() {
+                const $diamondCards = $('.diamond-card');
+                const $formSection = $('#form-section');
+                const $hiddenNominalInput = $('#selected-nominal');
+
+                // BARU: Ambil elemen untuk menampilkan ringkasan
+                const $summaryNominal = $('#summary-nominal');
+                const $summaryHarga = $('#summary-harga');
+
+                $diamondCards.on('click', function() {
+                    const $clickedCard = $(this);
+
+                    $diamondCards.removeClass('selected');
+                    $clickedCard.addClass('selected');
+
+                    // Ambil SEMUA data dari kartu yang di-klik
+                    const nominalValue = $clickedCard.data('nominal-value'); // Untuk dikirim ke database (e.g., "86")
+                    const nominalText = $clickedCard.data('nominal-text'); // Untuk ditampilkan (e.g., "86 Diamonds")
+                    const harga = $clickedCard.data('harga'); // Untuk ditampilkan (e.g., "Rp 22.000")
+
+                    // 1. Isi input tersembunyi (UNTUK DATABASE)
+                    // Nilai ini (misal: "86") akan disimpan di kolom 'nominal' database Anda
+                    $hiddenNominalInput.val(nominalValue);
+
+                    // 2. BARU: Tampilkan detail pilihan di area ringkasan (UNTUK PENGGUNA)
+                    $summaryNominal.text(nominalText);
+                    $summaryHarga.text(harga);
+
+                    // Tampilkan form jika masih tersembunyi
+                    if ($formSection.is(':hidden')) {
+                        $formSection.slideDown('fast');
+                    }
+
+                    $('html, body').animate({
+                        scrollTop: $formSection.offset().top - 80
+                    }, 300);
+                });
+            });
             $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
                 type: "line",
                 height: "70",

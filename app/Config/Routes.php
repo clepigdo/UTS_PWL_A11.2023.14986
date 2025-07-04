@@ -32,3 +32,8 @@ $routes->get('topup_ml/edit/(:num)', 'TopupMl::edit/$1');
 $routes->post('topup_ml/update/(:num)', 'TopupMl::update/$1');
 $routes->post('/topup_ml/store', 'TopupMl::store');
 $routes->post('topup_ml/delete/(:num)', 'TopupMl::delete/$1');
+
+//Pembayaran Routes
+$routes->get('payment/process/(:num)', 'PaymentController::buatTransaksi/$1');
+$routes->post('payment/notification', 'PaymentController::notification');
+

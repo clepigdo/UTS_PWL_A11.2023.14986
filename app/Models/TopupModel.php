@@ -8,6 +8,6 @@ class TopupModel extends Model
 {
     protected $table = 'topups';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['user_id', 'server_id', 'nominal', 'metode_pembayaran'];
+    protected $allowedFields = ['user_id', 'server_id', 'nominal', 'harga', 'metode_pembayaran', 'status_pembayaran'];
     protected $useTimestamps = true;
 }

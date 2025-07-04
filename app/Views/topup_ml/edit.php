@@ -85,59 +85,81 @@
 
             <div class="container">
                 <div class="container py-5">
-                    <div class="card bg-dark text-white shadow-lg p-4" style="max-width: 600px; margin: auto; border-radius: 15px;">
-                        <h3 class="text-center mb-4">Edit Top-Up Mobile Legends</h3>
+                    <div class="card bg-dark text-white shadow-lg p-3 p-md-4" style="border-radius: 15px;">
+                        <div class="card-body">
+                            <h3 class="text-center mb-4 text-warning">Edit Top-Up Mobile Legends</h3>
 
-                        <form action="<?= base_url('topup_ml/update/' . $topup['id']) ?>" method="post">
-                            <?= csrf_field() ?>
+                            <form action="<?= base_url('topup_ml/update/' . $topup['id']) ?>" method="post">
+                                <?= csrf_field() ?>
+                                <input type="hidden" id="selected-nominal" name="nominal" value="<?= esc($topup['nominal']) ?>">
 
-                            <!-- User ID -->
-                            <div class="mb-3">
-                                <label for="user_id" class="form-label">User ID</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="user_id" name="user_id" value="<?= esc($topup['user_id']) ?>" required>
-                            </div>
+                                <h5 class="mb-3">1. Pilih Nominal</h5>
+                                <div class="row g-3">
+                                    <?php if (!empty($daftar_nominal)): ?>
+                                        <?php foreach ($daftar_nominal as $value => $details): ?>
+                                            <?php
+                                            // Cek apakah nominal ini yang sedang dipilih/disimpan di database
+                                            $isSelected = (esc($topup['nominal']) == $value) ? 'selected' : '';
+                                            ?>
+                                            <div class="col-6 col-md-4">
+                                                <div class="diamond-card text-center <?= $isSelected ?>"
+                                                    data-nominal-value="<?= $value ?>"
+                                                    data-nominal-text="<?= esc($details['text']) ?>"
+                                                    data-harga="<?= esc($details['harga']) ?>">
 
-                            <!-- Server ID -->
-                            <div class="mb-3">
-                                <label for="server_id" class="form-label">Server ID</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="server_id" name="server_id" value="<?= esc($topup['server_id']) ?>" required>
-                            </div>
+                                                    <div class="fw-bold"><?= esc($details['text']) ?></div>
+                                                    <div class="text-white-50 small"><?= esc($details['bonus'] ?? '') ?></div>
+                                                    <div class="price-badge mt-2">Rp <?= number_format($details['harga'], 0, ',', '.') ?></div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
 
-                            <!-- Nominal -->
-                            <div class="mb-3">
-                                <label for="nominal" class="form-label">Pilih Nominal</label>
-                                <select class="form-select bg-dark text-white border-secondary" id="nominal" name="nominal" required>
-                                    <option value="" disabled>-- Pilih Nominal --</option>
-                                    <?php
-                                    $nominals = [86, 172, 257, 344, 429];
-                                    foreach ($nominals as $nom) {
-                                        $selected = $topup['nominal'] == $nom ? 'selected' : '';
-                                        echo "<option value='$nom' $selected>$nom Diamonds</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
+                                <hr class="border-secondary my-4">
 
-                            <!-- Metode Pembayaran -->
-                            <div class="mb-4">
-                                <label for="metode_pembayaran" class="form-label">Metode Pembayaran</label>
-                                <select class="form-select bg-dark text-white border-secondary" id="metode_pembayaran" name="metode_pembayaran" required>
-                                    <option value="" disabled>-- Pilih Metode Pembayaran --</option>
-                                    <?php
-                                    $metodes = ['Dana', 'OVO', 'Gopay', 'ShopeePay', 'Transfer Bank'];
-                                    foreach ($metodes as $metode) {
-                                        $selected = $topup['metode_pembayaran'] == $metode ? 'selected' : '';
-                                        echo "<option value='$metode' $selected>$metode</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
+                                <div id="form-section">
+                                    <div id="selection-summary" class="p-3 mb-4" style="background-color: #495057; border-left: 5px solid #ffc107; border-radius: 6px;">
+                                        <h6 class="text-warning mb-2">Ringkasan Pesanan</h6>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-white-50">Item:</span>
+                                            <span id="summary-nominal" class="fw-bold">--</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-1">
+                                            <span class="text-white-50">Harga:</span>
+                                            <span id="summary-harga" class="fw-bold">--</span>
+                                        </div>
+                                    </div>
 
-                            <!-- Tombol Submit -->
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-warning fw-bold">Update Top-Up</button>
-                            </div>
-                        </form>
+                                    <h5 class="mb-3 mt-4">2. Detail Akun</h5>
+                                    <div class="mb-3">
+                                        <label for="user_id" class="form-label">User ID</label>
+                                        <input type="text" class="form-control bg-dark text-white border-secondary" id="user_id" name="user_id" placeholder="Masukkan User ID" value="<?= esc($topup['user_id']) ?>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="server_id" class="form-label">Server ID</label>
+                                        <input type="text" class="form-control bg-dark text-white border-secondary" id="server_id" name="server_id" placeholder="Masukkan Server ID" value="<?= esc($topup['server_id']) ?>" required>
+                                    </div>
+
+                                    <h5 class="mb-3 mt-4">3. Metode Pembayaran</h5>
+                                    <div class="mb-4">
+                                        <label for="metode_pembayaran" class="form-label">Metode Pembayaran</label>
+                                        <select class="form-select bg-dark text-white border-secondary" id="metode_pembayaran" name="metode_pembayaran" required>
+                                            <option value="Dana" <?= (esc($topup['metode_pembayaran']) == 'Dana') ? 'selected' : '' ?>>DANA</option>
+                                            <option value="OVO" <?= (esc($topup['metode_pembayaran']) == 'OVO') ? 'selected' : '' ?>>OVO</option>
+                                            <option value="Gopay" <?= (esc($topup['metode_pembayaran']) == 'Gopay') ? 'selected' : '' ?>>GoPay</option>
+                                            <option value="ShopeePay" <?= (esc($topup['metode_pembayaran']) == 'ShopeePay') ? 'selected' : '' ?>>ShopeePay</option>
+                                            <option value="Transfer Bank" <?= (esc($topup['metode_pembayaran']) == 'Transfer Bank') ? 'selected' : '' ?>>Transfer Bank</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-warning fw-bold">Update Top-Up</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -241,6 +263,35 @@
         <script src="<?= base_url() ?>kaiadmin/assets/js/setting-demo.js"></script>
         <script src="<?= base_url() ?>kaiadmin/assets/js/demo.js"></script>
         <script>
+            $(document).ready(function() {
+                const $diamondCards = $('.diamond-card');
+                const $hiddenNominalInput = $('#selected-nominal');
+                const $summaryNominal = $('#summary-nominal');
+                const $summaryHarga = $('#summary-harga');
+
+                function updateSelection(cardElement) {
+                    const $card = $(cardElement);
+                    $diamondCards.removeClass('selected');
+                    $card.addClass('selected');
+
+                    const nominalValue = $card.data('nominal-value');
+                    const nominalText = $card.data('nominal-text');
+                    const harga = $card.data('harga');
+
+                    $hiddenNominalInput.val(nominalValue);
+                    $summaryNominal.text(nominalText);
+                    $summaryHarga.text('Rp ' + new Intl.NumberFormat('id-ID').format(harga));
+                }
+
+                $diamondCards.on('click', function() {
+                    updateSelection(this);
+                });
+
+                const initiallySelectedCard = $('.diamond-card.selected');
+                if (initiallySelectedCard.length > 0) {
+                    updateSelection(initiallySelectedCard);
+                }
+            });
             $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
                 type: "line",
                 height: "70",
