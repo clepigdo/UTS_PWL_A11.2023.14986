@@ -9,21 +9,22 @@ $routes->get('login',  'AuthController::login');
 $routes->post('login', 'AuthController::login');
 $routes->get('logout', 'AuthController::logout');
 
-
 // Dashboard spesifik per-role
 $routes->get('admin',  'DashboardController::admin', ['filter' => 'auth']);
 $routes->get('/admin/dashboard', 'DashboardController::dashboard', ['filter' => 'auth']);
 $routes->get('/admin/v_topup', 'DashboardController::v_topup', ['filter' => 'auth']);
 $routes->get('/admin/riwayat_pemesanan', 'DashboardController::riwayat_pemesanan', ['filter' => 'auth']);
 $routes->get('/admin/cek_pemesanan', 'DashboardController::cek_pemesanan', ['filter' => 'auth']);
-
-
+$routes->get('/admin/ulasan', 'ReviewController::index', ['filter' => 'auth']);
+$routes->post('/admin/ulasan/submit', 'ReviewController::submit', ['filter' => 'auth']); // TAMBAHKAN INI
 
 $routes->get('user',   'DashboardController::user', ['filter' => 'auth']);
 $routes->get('/user/dashboard', 'DashboardController::dashboard', ['filter' => 'auth']);
 $routes->get('/user/v_topup', 'DashboardController::v_topup', ['filter' => 'auth']);
 $routes->get('/user/riwayat_pemesanan', 'DashboardController::riwayat_pemesanan', ['filter' => 'auth']);
 $routes->get('/user/cek_pemesanan', 'DashboardController::cek_pemesanan', ['filter' => 'auth']);
+$routes->get('/user/ulasan', 'ReviewController::index', ['filter' => 'auth']);
+$routes->post('/user/ulasan/submit', 'ReviewController::submit', ['filter' => 'auth']); // TAMBAHKAN INI
 
 // Topup Routes
 $routes->get('/topup_ml/index', 'TopupMl::index');
@@ -36,4 +37,3 @@ $routes->post('topup_ml/delete/(:num)', 'TopupMl::delete/$1');
 //Pembayaran Routes
 $routes->get('payment/process/(:num)', 'PaymentController::buatTransaksi/$1');
 $routes->post('payment/notification', 'PaymentController::notification');
-

@@ -98,17 +98,17 @@
 
                             <!-- Slide 1 -->
                             <div class="carousel-item active">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 1">
+                                <img src="<?= base_url() ?>/images/valo.jpg" class="d-block mx-auto carousel-img" alt="Slide 1">
                             </div>
 
                             <!-- Slide 2 -->
                             <div class="carousel-item">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 2">
+                                <img src="<?= base_url() ?>/images/ml.png" class="d-block mx-auto carousel-img" alt="Slide 2">
                             </div>
 
                             <!-- Slide 3 -->
                             <div class="carousel-item">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" class="d-block mx-auto carousel-img" alt="Slide 3">
+                                <img src="<?= base_url() ?>/images/ff.jpg" class="d-block mx-auto carousel-img" alt="Slide 3">
                             </div>
 
                             <!-- Tombol Geser Kiri -->
@@ -130,10 +130,7 @@
 
                     <!-- TABS -->
                     <div class="d-flex justify-content-center mb-4">
-                        <button class="tab-btn active">★ Favorite</button>
-                        <button class="tab-btn">🎮 Games</button>
-                        <button class="tab-btn">🎟 Voucher</button>
-                        <button class="tab-btn">✨ Others</button>
+                        <button class="tab-btn active">Games</button>
                     </div>
 
                     <!-- GAME CARDS -->
@@ -141,7 +138,7 @@
                         <div class="col-6 col-md-3">
                             <a href="<?= base_url() ?>/topup_ml/index" class="text-decoration-none">
                                 <div class="game-card">
-                                    <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
+                                    <img src="<?= base_url() ?>/images/ml.png" alt="Mobile Legends ID">
                                     <div class="text-white game-title">MOBILE LEGENDS</div>
                                 </div>
                             </a>
@@ -149,21 +146,21 @@
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Honor of Kings">
+                                <img src="<?= base_url() ?>/images/pubg.png" alt="Honor of Kings">
                                 <div class="text-white game-title">PUBG MOBILE</div>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends MY">
+                                <img src="<?= base_url() ?>/images/valo.jpg" alt="Mobile Legends MY">
                                 <div class="text-white game-title">VALORANT</div>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Free Fire">
+                                <img src="<?= base_url() ?>/images/roblox.png" alt="Free Fire">
                                 <div class="text-white game-title">ROBLOX</div>
                             </div>
                         </div>
@@ -171,28 +168,28 @@
                     <div class="row g-4 mt-2">
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends ID">
+                                <img src="<?= base_url() ?>/images/pb.jpeg" alt="Mobile Legends ID">
                                 <div class="text-white game-title">POINT BLANK</div>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Honor of Kings">
+                                <img src="<?= base_url() ?>/images/hok.jpg" alt="Honor of Kings">
                                 <div class="text-white game-title">Honor of Kings</div>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Mobile Legends MY">
-                                <div class="text-white game-title">Mobile Legends MY</div>
+                                <img src="<?= base_url() ?>/images/gensin.jpg" alt="Mobile Legends MY">
+                                <div class="text-white game-title">Genshin Impact</div>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3 ">
                             <div class="game-card">
-                                <img src="<?= base_url() ?>/images/valo1.jpg" alt="Free Fire">
+                                <img src="<?= base_url() ?>/images/ff.jpg" alt="Free Fire">
                                 <div class="text-white game-title">Free Fire</div>
                             </div>
                         </div>

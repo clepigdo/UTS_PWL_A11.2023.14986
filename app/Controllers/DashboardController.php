@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\TopupModel;
+use App\Models\TopupModel; // Pastikan ini di-import
 
 class DashboardController extends BaseController
 {
@@ -15,10 +15,11 @@ class DashboardController extends BaseController
 
         $data = [
             'title'    => 'Dashboard Admin',
-            'username' => session()->get('username'),
+            'username' => session()->get('nama'), // Menggunakan 'nama' dari sesi
             'role'     => 'admin',
         ];
-        return view('layout', $data);
+        // Merender view v_dashboard
+        return view('v_dashboard', $data);
     }
 
     public function user()
@@ -29,10 +30,11 @@ class DashboardController extends BaseController
 
         $data = [
             'title'    => 'Dashboard User',
-            'username' => session()->get('username'),
+            'username' => session()->get('nama'), // Menggunakan 'nama' dari sesi
             'role'     => 'user',
         ];
-        return view('layout', $data);
+        // Merender view v_dashboard
+        return view('v_dashboard', $data);
     }
 
     public function dashboard()
@@ -51,14 +53,15 @@ class DashboardController extends BaseController
         // Data berdasarkan role
         $data = [
             'title'    => 'Dashboard',
-            'username' => session()->get('username'),
+            'username' => session()->get('nama'), // Menggunakan 'nama' dari sesi
             'role'     => $role,
             'info'     => $role === 'admin'
                 ? 'Statistik total transaksi, pengguna aktif, laporan harian'
                 : 'Riwayat transaksi Anda, status pemesanan, saldo topup',
         ];
 
-        return view('layout', $data);
+        // Merender view v_dashboard
+        return view('v_dashboard', $data);
     }
 
 
@@ -78,7 +81,7 @@ class DashboardController extends BaseController
 
         $data = [
             'title'    => 'Halaman Topup',
-            'username' => session()->get('username'),
+            'username' => session()->get('nama'), // Menggunakan 'nama' dari sesi
             'role'     => $role,
         ];
         return view('v_topup', $data);
@@ -105,7 +108,7 @@ class DashboardController extends BaseController
         // 2. Siapkan data dasar
         $data = [
             'title'    => 'Riwayat Pemesanan',
-            'username' => session()->get('username'),
+            'username' => session()->get('nama'), // Menggunakan 'nama' dari sesi
             'role'     => $role,
         ];
 
@@ -129,14 +132,29 @@ class DashboardController extends BaseController
 
     public function cek_pemesanan()
     {
+        // Hanya admin yang bisa mengakses halaman ini
         if (session()->get('role') !== 'admin') {
             return redirect()->to('/login');
         }
 
+        $topupModel = new TopupModel();
+        $order = null; // Inisialisasi variabel order
+        $orderId = $this->request->getVar('order_id'); // Ambil order_id dari GET/POST request
+
+        // Jika order_id ada, coba cari data pesanan
+        if ($orderId) {
+            $order = $topupModel->find($orderId); // Mencari pesanan berdasarkan primary key (id)
+            if (!$order) {
+                session()->setFlashdata('error', 'Pesanan dengan ID ' . esc($orderId) . ' tidak ditemukan.');
+            }
+        }
+
         $data = [
             'title'    => 'Cek Pemesanan',
-            'username' => session()->get('username'),
+            'username' => session()->get('nama'), // Menggunakan 'nama' dari sesi
             'role'     => session()->get('role'),
+            'order'    => $order, // Teruskan data pesanan ke view
+            'input_order_id' => $orderId // Teruskan ID yang dimasukkan pengguna
         ];
         return view('v_cek_pemesanan', $data);
     }
