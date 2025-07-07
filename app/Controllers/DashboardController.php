@@ -130,33 +130,38 @@ class DashboardController extends BaseController
     }
 
     public function download()
-    {
-        date_default_timezone_set('Asia/Jakarta');
+{
+    date_default_timezone_set('Asia/Jakarta');
 
-        $role = session()->get('role');
-        $topupModel = new TopupModel();
+    $role = session()->get('role');
+    $userId = session()->get('id'); // ambil ID user dari session
+    $topupModel = new TopupModel();
 
-        if ($role === 'admin') {
-            $topups = $topupModel
-                ->where('MONTH(created_at)', date('m'))
-                ->where('YEAR(created_at)', date('Y'))
-                ->findAll();
-        } else {
-            $topups = $topupModel->findAll();
-        }
-
-        $html = view('v_riwayatPDF', ['topups' => $topups]);
-
-        $filename = ($role === 'admin'
-            ? 'Riwayat-Pemesanan-Bulanan-'
-            : 'Riwayat-Pemesanan-Anda-') . date('y-m-d-H-i-s');
-
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        $dompdf->stream($filename);
+    if ($role === 'admin') {
+        // Admin melihat semua data topup bulan dan tahun ini
+        $topups = $topupModel
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
+            ->findAll();
+    } else {
+        // User hanya melihat data topup miliknya berdasarkan pembeli_id
+        $topups = $topupModel
+            ->where('pembeli_id', $userId)
+            ->findAll();
     }
+
+    $html = view('v_riwayatPDF', ['topups' => $topups]);
+
+    $filename = ($role === 'admin'
+        ? 'Riwayat-Pemesanan-Bulanan-'
+        : 'Riwayat-Pemesanan-Anda-') . date('y-m-d-H-i-s');
+
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+    $dompdf->stream($filename);
+}
 
     public function cek_pemesanan()
     {
