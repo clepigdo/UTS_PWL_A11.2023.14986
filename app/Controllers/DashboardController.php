@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\TopupModel; // Pastikan ini di-import
 use Dompdf\Dompdf;
+use App\Models\UserModel;
 
 class DashboardController extends BaseController
 {
@@ -40,6 +41,7 @@ class DashboardController extends BaseController
 
     public function dashboard()
     {
+        // --- Logika Role Anda (Sudah Benar) ---
         $role = session()->get('role');
         $uri  = service('uri')->getSegment(1);
 
@@ -51,19 +53,36 @@ class DashboardController extends BaseController
             return redirect()->to('/user/dashboard');
         }
 
-        // Data berdasarkan role
+        // --- Logika Pengambilan Data (BARU) ---
+        $topupModel = new TopupModel();
+        $userModel = new UserModel();
+
+        // Panggil fungsi untuk mendapatkan data summary
+        $summaryData = $topupModel->getSummaryData();
+
+        // Hitung total pengguna
+        $totalUsers = $userModel->countAllResults();
+
+        // Ambil daftar semua pengguna untuk ditampilkan di tabel
+        $allUsers = $userModel->orderBy('created_at', 'DESC')->findAll();
+
+        // --- Siapkan semua data untuk dikirim ke view ---
         $data = [
-            'title'    => 'Dashboard',
-            'username' => session()->get('nama'), // Menggunakan 'nama' dari sesi
-            'role'     => $role,
-            'info'     => $role === 'admin'
-                ? 'Statistik total transaksi, pengguna aktif, laporan harian'
-                : 'Riwayat transaksi Anda, status pemesanan, saldo topup',
+            'title'           => 'Dashboard',
+            'username'        => session()->get('nama'),
+            'role'            => $role,
+            // Data Summary Baru
+            'total_volume'    => $summaryData['total_volume'],
+            'total_transaksi' => $summaryData['total_transaksi'],
+            'total_users'     => $totalUsers,
+            // Data Tabel Pengguna Baru
+            'users'           => $allUsers
         ];
 
-        // Merender view v_dashboard
+        // Merender view v_dashboard dengan semua data
         return view('v_dashboard', $data);
     }
+
 
 
 

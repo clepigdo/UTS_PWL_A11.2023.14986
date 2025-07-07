@@ -151,7 +151,7 @@
                                                         </div>
                                                         <div class="d-flex flex-column mt-2">
                                                             <span class="text-white-50 fs-sm">Total Harga</span>
-                                                            <span class="fw-bold fs-5">Rp <?= number_format($order['harga'], 0, ',', '.') ?></span>
+                                                            <span class="fw-bold fs-5">Rp <?= number_format($order['harga_akhir'], 0, ',', '.') ?></span>
                                                         </div>
                                                     </div>
                                                 </div>

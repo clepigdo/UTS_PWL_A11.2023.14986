@@ -56,6 +56,7 @@ class TopupMl extends BaseController
 
     public function store()
     {
+        // Daftar harga yang sah di sisi server
         $daftarHarga = [
             '86' => 22000,
             '172' => 44000,
@@ -67,12 +68,19 @@ class TopupMl extends BaseController
         $hargaValid = $daftarHarga[$nominalDipilih] ?? 0;
         $metodePembayaranDipilih = $this->request->getPost('metode_pembayaran');
 
+        // Hitung harga akhir dengan PPN
+        $hargaDasar = (int) $hargaValid;
+        $nilaiPpn = floor($hargaDasar * 0.11);
+        $hargaAkhirBulat = $hargaDasar + $nilaiPpn;
+
+        // Siapkan data untuk disimpan, termasuk pembeli_id dan harga_akhir
         $dataToSave = [
             'user_id'           => $this->request->getPost('user_id'),
             'server_id'         => $this->request->getPost('server_id'),
-            'pembeli_id'        => session()->get('id'), // Menyimpan ID user yang login
+            'pembeli_id'        => session()->get('id'), // <-- MENYIMPAN ID USER YANG LOGIN
             'nominal'           => $nominalDipilih,
-            'harga'             => $hargaValid,
+            'harga'             => $hargaValid, // Harga dasar
+            'harga_akhir'       => $hargaAkhirBulat, // Harga setelah PPN
             'metode_pembayaran' => $metodePembayaranDipilih,
             'status_pembayaran' => 'pending'
         ];
@@ -80,19 +88,12 @@ class TopupMl extends BaseController
         if ($this->topupModel->save($dataToSave)) {
             $newOrderId = $this->topupModel->getInsertID();
 
-            // ===================================================================
-            // BAGIAN 2: BUAT SESI PEMBAYARAN MIDTRANS
-            // ===================================================================
             try {
                 // Konfigurasi Midtrans
                 \Midtrans\Config::$serverKey = getenv('MIDTRANS_SERVER_KEY');
                 \Midtrans\Config::$isProduction = (getenv('MIDTRANS_ENVIRONMENT') == 'production');
                 \Midtrans\Config::$isSanitized = true;
                 \Midtrans\Config::$is3ds = true;
-
-                $hargaDasar = (int) $hargaValid;
-                $nilaiPpn = floor($hargaDasar * 0.11);
-                $hargaAkhirBulat = $hargaDasar + $nilaiPpn;
 
                 $kodeMidtrans = strtolower($metodePembayaranDipilih);
                 if ($kodeMidtrans == 'qris') {
@@ -102,9 +103,9 @@ class TopupMl extends BaseController
                 $params = [
                     'transaction_details' => [
                         'order_id' => 'CLEP-' . $newOrderId . '-' . time(),
-                        'gross_amount' => $hargaAkhirBulat,
+                        'gross_amount' => $hargaAkhirBulat, // Kirim harga akhir ke Midtrans
                     ],
-                    'enabled_payments' => [$kodeMidtrans], // Mengunci metode pembayaran
+                    'enabled_payments' => [$kodeMidtrans],
                     'customer_details' => [
                         'first_name' => 'User-' . $this->request->getPost('user_id'),
                         'email'      => 'user' . $this->request->getPost('user_id') . '@example.com',
@@ -121,16 +122,16 @@ class TopupMl extends BaseController
                     'pesanan'     => $this->topupModel->find($newOrderId)
                 ];
 
-                // Langsung tampilkan halaman pembayaran, tidak ada lagi redirect
                 return view('pembayaran/pilih_metode', $data);
             } catch (\Exception $e) {
                 log_message('error', 'Midtrans API Error: ' . $e->getMessage());
-                return redirect()->back()->with('error', 'Gagal membuat sesi pembayaran. Silakan coba lagi.');
+                return redirect()->back()->with('error', 'Gagal membuat sesi pembayaran.');
             }
         } else {
             return redirect()->back()->with('error', 'Gagal membuat pesanan.');
         }
     }
+
 
     public function edit($id)
     {

@@ -31,6 +31,115 @@
             </div>
         </div>
     </div>
+    <?php if ($role === 'admin'): ?>
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-success bubble-shadow-small">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Volume Transaksi</p>
+                                    <h4 class="card-title">Rp <?= number_format($total_volume ?? 0, 0, ',', '.') ?></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-info bubble-shadow-small">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Transaksi Sukses</p>
+                                    <h4 class="card-title"><?= esc($total_transaksi ?? 0) ?></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="col col-stats ms-3 ms-sm-0">
+                                <div class="numbers">
+                                    <p class="card-category">Total Pengguna</p>
+                                    <h4 class="card-title"><?= esc($total_users ?? 0) ?></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Daftar Pengguna Terdaftar</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped mt-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Tanggal Bergabung</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($users)): ?>
+                                        <?php $no = 1;
+                                        foreach ($users as $user): ?>
+                                            <tr>
+                                                <td><?= $no++ ?></td>
+                                                <td><?= esc($user['nama']) ?></td>
+                                                <td><?= esc($user['username']) ?></td>
+                                                <td>
+                                                    <?php if ($user['role'] == 'admin'): ?>
+                                                        <span class="badge bg-success">Admin</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-info">User</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><?= date('d F Y', strtotime($user['created_at'])) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="5" class="text-center">Tidak ada data pengguna.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
     <div class="row">
         <?php if ($role === 'admin'): ?>
 
