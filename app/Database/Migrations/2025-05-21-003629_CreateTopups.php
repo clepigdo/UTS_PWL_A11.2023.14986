@@ -26,6 +26,10 @@ class CreateTopups extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '50',
             ],
+            'harga' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '15,2',
+            ],
             'metode_pembayaran' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '50',

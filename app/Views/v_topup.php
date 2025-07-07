@@ -256,8 +256,6 @@
                 </style>
                 <?= $this->include('components/footer') ?>
             </div>
-
-
         </div>
         <!--   Core JS Files   -->
         <script src="<?= base_url() ?>kaiadmin/assets/js/core/jquery-3.7.1.min.js"></script>

@@ -10,7 +10,7 @@ $routes->post('login', 'AuthController::login');
 $routes->get('logout', 'AuthController::logout');
 
 // Dashboard spesifik per-role
-$routes->group('admin', ['filter' => 'auth'], function($routes) {
+$routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'DashboardController::admin');
     $routes->get('dashboard', 'DashboardController::dashboard');
     $routes->get('v_topup', 'DashboardController::v_topup');
@@ -21,7 +21,7 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->post('ulasan/submit', 'ReviewController::submit');
 });
 
-$routes->group('user', ['filter' => 'auth'], function($routes) {
+$routes->group('user', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'DashboardController::user');
     $routes->get('dashboard', 'DashboardController::dashboard');
     $routes->get('v_topup', 'DashboardController::v_topup');
@@ -34,7 +34,7 @@ $routes->group('user', ['filter' => 'auth'], function($routes) {
 });
 
 // Topup Routes
-$routes->group('topup_ml', function($routes) {
+$routes->group('topup_ml', function ($routes) {
     $routes->get('index',             'TopupMl::index');
     $routes->get('create',            'TopupMl::create');
     $routes->get('edit/(:num)',       'TopupMl::edit/$1');
@@ -45,7 +45,7 @@ $routes->group('topup_ml', function($routes) {
 });
 
 //Pembayaran Routes
-$routes->group('payment', function($routes) {
+$routes->group('payment', function ($routes) {
     $routes->get('process/(:num)',    'PaymentController::buatTransaksi/$1');
     $routes->post('notification',     'PaymentController::notification');
 });

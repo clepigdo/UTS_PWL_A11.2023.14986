@@ -117,15 +117,13 @@ class DashboardController extends BaseController
         if ($role === 'admin') {
             // Jika admin, tampilkan semua pesanan
             $data['orders'] = $topupModel->orderBy('created_at', 'DESC')->findAll();
-        } else {
-            // Jika user, tampilkan hanya pesanannya sendiri
-            // ASUMSI: Anda punya 'user_id' di session yang cocok dengan kolom di tabel pesanan
-            $userId = session()->get('id_user'); // Sesuaikan nama session ID Anda
-            $data['orders'] = $topupModel->where('user_id', $userId) // Sesuaikan nama kolom
+        } else { // Jika role adalah 'user'
+            $pembeliId = session()->get('id');
+            $data['orders'] = $topupModel->where('pembeli_id', $pembeliId)
                 ->orderBy('created_at', 'DESC')
                 ->findAll();
         }
-    
+
 
         // Kirim semua data (termasuk data pesanan) ke view
         return view('v_riwayat', $data);
@@ -158,7 +156,7 @@ class DashboardController extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
         $dompdf->stream($filename);
-}
+    }
 
     public function cek_pemesanan()
     {

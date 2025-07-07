@@ -29,11 +29,13 @@ class AuthController extends BaseController
             // Hardcode user list (username, password hash, role)
             $users = [
                 [
+                    'id'       => 1,
                     'username' => 'admin',
                     'password' => '$2a$12$XcPy.6GolsRC4.NqX1t0pO0RuV81VyvKp9zths7Y67nKzkLc3tkzG', // adminku123
                     'role'     => 'admin'
                 ],
                 [
+                    'id'       => 2,
                     'username' => 'user',
                     'password' => '$2a$12$vNgun2Qh73J5DkyDN2SPhO12UD7EuoD74nLuhbVqGScOwQVK3GPqi', // akuuser123
                     'role'     => 'user'
@@ -54,7 +56,7 @@ class AuthController extends BaseController
                 // Verifikasi password
                 if (password_verify($password, $foundUser['password'])) {
                     session()->set([
-                        'id'         => uniqid(),
+                        'id'         => $foundUser['id'],
                         'username'   => $foundUser['username'],
                         'nama'       => ucfirst($foundUser['username']),
                         'role'       => $foundUser['role'],

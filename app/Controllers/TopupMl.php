@@ -49,7 +49,7 @@ class TopupMl extends BaseController
 
     public function store()
     {
-        // Daftar harga yang sah di sisi server (ini sudah benar)
+        
         $daftarHarga = [
             '86' => 22000,
             '172' => 44000,
@@ -59,25 +59,24 @@ class TopupMl extends BaseController
         ];
         $nominalDipilih = $this->request->getPost('nominal');
         $hargaValid = $daftarHarga[$nominalDipilih] ?? 0;
-
-        // Ambil metode pembayaran yang dipilih pengguna di form awal
         $metodePembayaranDipilih = $this->request->getPost('metode_pembayaran');
 
-        // Siapkan data untuk disimpan
         $dataToSave = [
             'user_id'           => $this->request->getPost('user_id'),
             'server_id'         => $this->request->getPost('server_id'),
+            'pembeli_id'        => session()->get('id'), // Menyimpan ID user yang login
             'nominal'           => $nominalDipilih,
             'harga'             => $hargaValid,
             'metode_pembayaran' => $metodePembayaranDipilih,
             'status_pembayaran' => 'pending'
         ];
 
-        // Simpan data dan lanjutkan hanya jika berhasil
         if ($this->topupModel->save($dataToSave)) {
-            // Ambil ID dari pesanan yang BARU saja dibuat
             $newOrderId = $this->topupModel->getInsertID();
 
+            // ===================================================================
+            // BAGIAN 2: BUAT SESI PEMBAYARAN MIDTRANS
+            // ===================================================================
             try {
                 // Konfigurasi Midtrans
                 \Midtrans\Config::$serverKey = getenv('MIDTRANS_SERVER_KEY');
@@ -85,35 +84,30 @@ class TopupMl extends BaseController
                 \Midtrans\Config::$isSanitized = true;
                 \Midtrans\Config::$is3ds = true;
 
-                // Hitung harga akhir dengan PPN
                 $hargaDasar = (int) $hargaValid;
                 $nilaiPpn = floor($hargaDasar * 0.11);
                 $hargaAkhirBulat = $hargaDasar + $nilaiPpn;
 
-                // Konversi kode pembayaran dari form Anda ke kode Midtrans
-                // PENTING: Kode Midtrans biasanya huruf kecil. Misal: 'gopay', 'bca_va'
                 $kodeMidtrans = strtolower($metodePembayaranDipilih);
+                if ($kodeMidtrans == 'qris') {
+                    $kodeMidtrans = 'gopay';
+                }
 
-                // Siapkan parameter untuk Midtrans
                 $params = [
                     'transaction_details' => [
                         'order_id' => 'CLEP-' . $newOrderId . '-' . time(),
                         'gross_amount' => $hargaAkhirBulat,
                     ],
-                    // === INI BAGIAN KUNCINYA UNTUK MENGUNCI METODE BAYAR ===
-                    'enabled_payments' => [$kodeMidtrans],
-                    // =========================================================
+                    'enabled_payments' => [$kodeMidtrans], // Mengunci metode pembayaran
                     'customer_details' => [
                         'first_name' => 'User-' . $this->request->getPost('user_id'),
                         'email'      => 'user' . $this->request->getPost('user_id') . '@example.com',
                     ],
-                    'finish_redirect_url' => base_url(session()->get('role') . '/riwayat_pemesanan')
+                    'finish_redirect_url' => base_url(session()->get('role') . '/riwayat_pemesanan'),
                 ];
 
-                // Dapatkan Snap Token dari Midtrans
                 $snapToken = \Midtrans\Snap::getSnapToken($params);
 
-                // Siapkan data untuk dikirim ke view pembayaran
                 $data = [
                     'title'       => 'Lakukan Pembayaran',
                     'token'       => $snapToken,
@@ -121,14 +115,13 @@ class TopupMl extends BaseController
                     'pesanan'     => $this->topupModel->find($newOrderId)
                 ];
 
-                // Langsung tampilkan halaman pembayaran, tidak perlu redirect lagi
+                // Langsung tampilkan halaman pembayaran, tidak ada lagi redirect
                 return view('pembayaran/pilih_metode', $data);
             } catch (\Exception $e) {
                 log_message('error', 'Midtrans API Error: ' . $e->getMessage());
                 return redirect()->back()->with('error', 'Gagal membuat sesi pembayaran. Silakan coba lagi.');
             }
         } else {
-            // Jika gagal menyimpan ke database
             return redirect()->back()->with('error', 'Gagal membuat pesanan.');
         }
     }

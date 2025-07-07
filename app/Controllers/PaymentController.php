@@ -89,42 +89,38 @@ class PaymentController extends BaseController
 
     public function notification()
     {
-        // Terima notifikasi dalam format JSON
-        $json = $this->request->getBody();
-        $notification = json_decode($json, true);
+        try {
+            // 1. Cukup buat instance, library akan membaca input secara otomatis
+            $notif = new \Midtrans\Notification();
 
-        // Buat instance dari library Midtrans Notification
-        $midtransNotification = new \Midtrans\Notification();
+            // 2. Ambil data penting
+            $transactionStatus = $notif->transaction_status;
+            $fraudStatus = $notif->fraud_status;
+            $orderIdMidtrans = $notif->order_id;
 
-        // Verifikasi signature key untuk keamanan
-        // Ini memastikan notifikasi benar-benar datang dari Midtrans
-        $transactionStatus = $midtransNotification->transaction_status;
-        $fraudStatus = $midtransNotification->fraud_status;
-
-        // Ambil order_id dari notifikasi. Contoh: "CLEP-12-xxxx"
-        $orderIdMidtrans = $midtransNotification->order_id;
-        // Kita perlu mengambil ID internal kita dari string tersebut
-        $parts = explode('-', $orderIdMidtrans);
-        $internalOrderId = $parts[1]; // Mengambil angka '12'
-
-        // Logika untuk memproses status
-        if ($transactionStatus == 'settlement' || $transactionStatus == 'capture') {
-            if ($fraudStatus == 'accept') {
-                // Pembayaran berhasil dan aman
-                // Lakukan update status di database Anda
-                $topupModel = new \App\Models\TopupModel();
-                $topupModel->update($internalOrderId, ['status_pembayaran' => 'paid']);
+            // 3. Pengecekan format order_id yang aman
+            $parts = explode('-', $orderIdMidtrans);
+            if (count($parts) < 2 || !is_numeric($parts[1])) {
+                // Abaikan notifikasi tes atau yang formatnya salah
+                return $this->response->setStatusCode(200)->setBody('OK. Test notification or invalid Order ID format.');
             }
-        } else if ($transactionStatus == 'pending') {
-            // Pembayaran masih menunggu
-            // Anda bisa update status jika perlu, atau biarkan saja
-        } else {
-            // Pembayaran gagal, dibatalkan, atau kadaluarsa
-            $topupModel = new \App\Models\TopupModel();
-            $topupModel->update($internalOrderId, ['status_pembayaran' => 'failed']);
-        }
+            $internalOrderId = $parts[1];
 
-        // Kirim response 200 OK ke Midtrans untuk memberitahu notifikasi sudah diterima
-        return $this->response->setStatusCode(200)->setBody('OK');
+            // 4. Inisialisasi Model
+            $topupModel = new \App\Models\TopupModel();
+
+            // 5. Logika update status yang lengkap
+            if ($transactionStatus == 'settlement' || ($transactionStatus == 'capture' && $fraudStatus == 'accept')) {
+                $topupModel->update($internalOrderId, ['status_pembayaran' => 'paid']);
+            } else if (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
+                $topupModel->update($internalOrderId, ['status_pembayaran' => 'failed']);
+            }
+
+            // 6. Selalu kirim response 200 OK ke Midtrans
+            return $this->response->setStatusCode(200)->setBody('OK. Notification processed.');
+        } catch (\Exception $e) {
+            log_message('error', '[Midtrans Notification Error] ' . $e->getMessage());
+            return $this->response->setStatusCode(200)->setBody('Error processing notification.');
+        }
     }
 }
