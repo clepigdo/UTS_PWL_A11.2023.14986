@@ -3,18 +3,20 @@
 namespace App\Controllers;
 
 use App\Models\TopupModel;
+use App\Models\ReviewModel; // Tambahkan ini untuk mengimpor ReviewModel
 
 class TopupMl extends BaseController
 {
     protected $topupModel;
+    protected $reviewModel; // Tambahkan properti untuk ReviewModel
     protected $client;
     protected $merchant;
     protected $signature;
-    // protected $topupModel;
 
     public function __construct()
     {
         $this->topupModel = new TopupModel();
+        $this->reviewModel = new ReviewModel(); // Inisialisasi ReviewModel
         $this->client = new \GuzzleHttp\Client();
         $this->merchant = env('APIGAMES_MERCHANT_ID');
         $this->signature = env('APIGAMES_SIGNATURE');
@@ -28,6 +30,11 @@ class TopupMl extends BaseController
 
     public function create()
     {
+        // Ambil ulasan terbaru
+        // Anda mungkin ingin memfilter ulasan hanya untuk top-up Mobile Legends jika ada kategori
+        // Untuk contoh ini, kita ambil 5 ulasan terbaru secara umum
+        $reviews = $this->reviewModel->orderBy('created_at', 'DESC')->findAll(5);
+
         $data = [
             'daftar_nominal' => [
                 '86' => 22000,
@@ -36,20 +43,19 @@ class TopupMl extends BaseController
                 '344' => 88000,
                 '429' => 110000
             ],
-
             'daftar_pembayaran' => [
                 'GOPAY' => ['nama' => 'GoPay', 'logo' => 'gopay.png'],
                 'DANA'  => ['nama' => 'DANA', 'logo' => 'dana.png'],
                 'OVO'   => ['nama' => 'OVO', 'logo' => 'ovo.png'],
                 'QRIS'  => ['nama' => 'QRIS', 'logo' => 'qris.png', 'label' => 'Termurah'],
-            ]
+            ],
+            'reviews' => $reviews // Tambahkan data ulasan ke sini
         ];
         return view('topup_ml/create', $data);
     }
 
     public function store()
     {
-        
         $daftarHarga = [
             '86' => 22000,
             '172' => 44000,

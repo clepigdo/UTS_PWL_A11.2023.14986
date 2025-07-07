@@ -136,7 +136,7 @@
                     <!-- GAME CARDS -->
                     <div class="row g-4">
                         <div class="col-6 col-md-3">
-                            <a href="<?= base_url() ?>/topup_ml/index" class="text-decoration-none">
+                            <a href="<?= base_url() ?>/topup_ml/create" class="text-decoration-none">
                                 <div class="game-card">
                                     <img src="<?= base_url() ?>/images/ml.png" alt="Mobile Legends ID">
                                     <div class="text-white game-title">MOBILE LEGENDS</div>

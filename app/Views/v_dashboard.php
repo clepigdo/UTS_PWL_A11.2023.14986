@@ -20,123 +20,21 @@
     </div>
 
     <div class="row">
+        <div class="col-md-12">
+            <div class="card bg-info-gradient text-white shadow-lg p-4 mb-4" style="border-radius: 15px;">
+                <div class="card-body">
+                    <h2 class="text-white text-center mb-3">Selamat Datang di ClepStore!</h2>
+                    <p class="lead text-white-50 text-center">
+                        ClepStore adalah platform terdepan untuk segala kebutuhan top-up game dan layanan digital Anda. Nikmati pengalaman transaksi yang cepat, aman, dan terpercaya untuk game favorit Anda!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <?php if ($role === 'admin'): ?>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div class="icon-big text-center icon-primary op-8">
-                                    <i class="fas fa-chart-bar"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ml-3 ml-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Total Transaksi Hari Ini</p>
-                                    <h4 class="card-title">120</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div class="icon-big text-center icon-info op-8">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ml-3 ml-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Jumlah Pengguna Terdaftar</p>
-                                    <h4 class="card-title">58</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div class="icon-big text-center icon-warning op-8">
-                                    <i class="fas fa-box"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ml-3 ml-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Pemesanan Belum Diproses</p>
-                                    <h4 class="card-title">10</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php elseif ($role === 'user'): ?>
-            <div class="col-sm-6 col-md-4">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div class="icon-big text-center icon-success op-8">
-                                    <i class="fas fa-wallet"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ml-3 ml-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Saldo Topup</p>
-                                    <h4 class="card-title">Rp 100.000</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div class="icon-big text-center icon-secondary op-8">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ml-3 ml-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Status Pemesanan Terakhir</p>
-                                    <h4 class="card-title">Selesai</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="card card-stats card-round">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-icon">
-                                <div class="icon-big text-center icon-danger op-8">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </div>
-                            </div>
-                            <div class="col col-stats ml-3 ml-sm-0">
-                                <div class="numbers">
-                                    <p class="card-category">Total Pemesanan Anda</p>
-                                    <h4 class="card-title">3 kali</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
+
+        <?php else: /* Untuk peran 'user' dan peran lainnya */ ?>
             <div class="col-md-12 mt-4">
                 <div class="card">
                     <div class="card-header">
@@ -176,21 +74,18 @@
                                     </div>
                                 </a>
                             </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        <?php else: ?>
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h1>Selamat Datang di ClepStore</h1>
-                        <p>Silakan login untuk mengakses dashboard Anda.</p>
-                        <a href="<?= base_url('login') ?>" class="btn btn-primary">Login Sekarang</a>
+                        </div>
                     </div>
                 </div>
             </div>
         <?php endif; ?>
     </div>
 </div>
+
+<style>
+    .bg-purple {
+        background-color: #8067F0 !important;
+    }
+</style>
+
 <?= $this->endSection() ?>
