@@ -28,18 +28,24 @@ $routes->group('user', ['filter' => 'auth'], function($routes) {
     $routes->get('riwayat_pemesanan', 'DashboardController::riwayat_pemesanan');
     $routes->get('download', 'DashboardController::download');
     $routes->get('cek_pemesanan', 'DashboardController::cek_pemesanan');
+
     $routes->get('ulasan', 'ReviewController::index');
     $routes->post('ulasan/submit', 'ReviewController::submit');
 });
 
 // Topup Routes
-$routes->get('/topup_ml/index', 'TopupMl::index');
-$routes->get('/topup_ml/create', 'TopupMl::create');
-$routes->get('topup_ml/edit/(:num)', 'TopupMl::edit/$1');
-$routes->post('topup_ml/update/(:num)', 'TopupMl::update/$1');
-$routes->post('/topup_ml/store', 'TopupMl::store');
-$routes->post('topup_ml/delete/(:num)', 'TopupMl::delete/$1');
+$routes->group('topup_ml', function($routes) {
+    $routes->get('index',             'TopupMl::index');
+    $routes->get('create',            'TopupMl::create');
+    $routes->get('edit/(:num)',       'TopupMl::edit/$1');
+    $routes->post('update/(:num)',    'TopupMl::update/$1');
+    $routes->post('store',            'TopupMl::store');
+    $routes->post('delete/(:num)',    'TopupMl::delete/$1');
+    $routes->get('getUsn', 'TopupMl::getUsn');
+});
 
 //Pembayaran Routes
-$routes->get('payment/process/(:num)', 'PaymentController::buatTransaksi/$1');
-$routes->post('payment/notification', 'PaymentController::notification');
+$routes->group('payment', function($routes) {
+    $routes->get('process/(:num)',    'PaymentController::buatTransaksi/$1');
+    $routes->post('notification',     'PaymentController::notification');
+});

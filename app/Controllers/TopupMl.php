@@ -7,10 +7,17 @@ use App\Models\TopupModel;
 class TopupMl extends BaseController
 {
     protected $topupModel;
+    protected $client;
+    protected $merchant;
+    protected $signature;
+    // protected $topupModel;
 
     public function __construct()
     {
         $this->topupModel = new TopupModel();
+        $this->client = new \GuzzleHttp\Client();
+        $this->merchant = env('APIGAMES_MERCHANT_ID');
+        $this->signature = env('APIGAMES_SIGNATURE');
     }
 
     public function index()
