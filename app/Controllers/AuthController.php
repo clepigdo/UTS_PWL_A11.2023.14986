@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\UserModel;
 
 class AuthController extends BaseController
 {
@@ -11,77 +12,69 @@ class AuthController extends BaseController
         helper('form');
     }
 
+    // --- FUNGSI LOGIN BARU (MENGGUNAKAN DATABASE) ---
     public function login()
     {
-        // Jika sudah login, langsung ke halaman dashboard yang sesuai
         if (session()->get('isLoggedIn')) {
-            if (session()->get('role') === 'admin') {
-                return redirect()->to('/admin/dashboard');
-            } elseif (session()->get('role') === 'user') {
-                return redirect()->to('/user/dashboard');
-            }
+            $role = session()->get('role');
+            return redirect()->to("/$role/dashboard");
         }
 
         if ($this->request->getPost()) {
+            $userModel = new UserModel();
             $username = $this->request->getVar('username');
             $password = $this->request->getVar('password');
 
-            // Hardcode user list (username, password hash, role)
-            $users = [
-                [
-                    'id'       => 1,
-                    'username' => 'admin',
-                    'password' => '$2a$12$XcPy.6GolsRC4.NqX1t0pO0RuV81VyvKp9zths7Y67nKzkLc3tkzG', // adminku123
-                    'role'     => 'admin'
-                ],
-                [
-                    'id'       => 2,
-                    'username' => 'user',
-                    'password' => '$2a$12$vNgun2Qh73J5DkyDN2SPhO12UD7EuoD74nLuhbVqGScOwQVK3GPqi', // akuuser123
-                    'role'     => 'user'
-                ],
-            ];
+            $user = $userModel->where('username', $username)->first();
 
-            // Cari user berdasarkan username
-            $foundUser = null;
-            foreach ($users as $user) {
-                if ($user['username'] === $username) {
-                    $foundUser = $user;
-                    break;
-                }
-            }
+            if ($user && password_verify($password, $user['password'])) {
+                session()->set([
+                    'id'         => $user['id'],
+                    'username'   => $user['username'],
+                    'nama'       => $user['nama'],
+                    'role'       => $user['role'],
+                    'isLoggedIn' => true
+                ]);
 
-            // Jika user ditemukan
-            if ($foundUser) {
-                // Verifikasi password
-                if (password_verify($password, $foundUser['password'])) {
-                    session()->set([
-                        'id'         => $foundUser['id'],
-                        'username'   => $foundUser['username'],
-                        'nama'       => ucfirst($foundUser['username']),
-                        'role'       => $foundUser['role'],
-                        'isLoggedIn' => true
-                    ]);
-                    session()->setFlashdata('login_success', true);
-
-                    if ($foundUser['role'] === 'admin') {
-                        return redirect()->to('/admin/dashboard');
-                    }
-                    return redirect()->to('/user/dashboard');
-                } else {
-                    session()->setFlashdata('failed', 'Password salah.');
-                    return redirect()->back()->withInput();
-                }
+                return redirect()->to("/{$user['role']}/dashboard");
             } else {
-                session()->setFlashdata('failed', 'Username tidak ditemukan.');
+                session()->setFlashdata('failed', 'Username atau Password salah.');
                 return redirect()->back()->withInput();
             }
         }
 
-        // Tampilkan form login
         return view('v_login');
     }
 
+    // --- FUNGSI REGISTER BARU ---
+    public function register()
+    {
+        if ($this->request->getPost()) {
+            $validationRules = [
+                'nama'         => 'required|min_length[3]',
+                'username'     => 'required|min_length[3]|is_unique[users.username]',
+                'password'     => 'required|min_length[6]',
+                'pass_confirm' => 'required|matches[password]'
+            ];
+
+            if (!$this->validate($validationRules)) {
+                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            }
+
+            $userModel = new UserModel();
+            $userModel->save([
+                'nama'     => $this->request->getVar('nama'),
+                'username' => $this->request->getVar('username'),
+                'password' => $this->request->getVar('password'),
+                'role'     => 'user' // Default role untuk registrasi baru
+            ]);
+
+            session()->setFlashdata('success', 'Registrasi berhasil! Silakan login.');
+            return redirect()->to('/login');
+        }
+
+        return view('v_register');
+    }
 
     public function logout()
     {

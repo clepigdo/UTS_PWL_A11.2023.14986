@@ -8,6 +8,8 @@ $routes->get('/',      'AuthController::login');
 $routes->get('login',  'AuthController::login');
 $routes->post('login', 'AuthController::login');
 $routes->get('logout', 'AuthController::logout');
+$routes->get('register', 'AuthController::register');
+$routes->post('register', 'AuthController::register');
 
 // Dashboard spesifik per-role
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
