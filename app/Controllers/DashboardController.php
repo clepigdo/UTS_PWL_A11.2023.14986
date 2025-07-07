@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\TopupModel; // Pastikan ini di-import
+use Dompdf\Dompdf;
 
 class DashboardController extends BaseController
 {
@@ -120,7 +121,7 @@ class DashboardController extends BaseController
             // Jika user, tampilkan hanya pesanannya sendiri
             // ASUMSI: Anda punya 'user_id' di session yang cocok dengan kolom di tabel pesanan
             $userId = session()->get('id_user'); // Sesuaikan nama session ID Anda
-            $data['orders'] = $topupModel->where('user_id_pembeli', $userId) // Sesuaikan nama kolom
+            $data['orders'] = $topupModel->where('user_id', $userId) // Sesuaikan nama kolom
                 ->orderBy('created_at', 'DESC')
                 ->findAll();
         }
@@ -129,6 +130,35 @@ class DashboardController extends BaseController
         // Kirim semua data (termasuk data pesanan) ke view
         return view('v_riwayat', $data);
     }
+
+    public function download()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+
+        $role = session()->get('role');
+        $topupModel = new TopupModel();
+
+        if ($role === 'admin') {
+            $topups = $topupModel
+                ->where('MONTH(created_at)', date('m'))
+                ->where('YEAR(created_at)', date('Y'))
+                ->findAll();
+        } else {
+            $topups = $topupModel->findAll();
+        }
+
+        $html = view('v_riwayatPDF', ['topups' => $topups]);
+
+        $filename = ($role === 'admin'
+            ? 'Riwayat-Pemesanan-Bulanan-'
+            : 'Riwayat-Pemesanan-Anda-') . date('y-m-d-H-i-s');
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $dompdf->stream($filename);
+}
 
     public function cek_pemesanan()
     {

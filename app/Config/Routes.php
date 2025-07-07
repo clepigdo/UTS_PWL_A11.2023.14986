@@ -10,21 +10,27 @@ $routes->post('login', 'AuthController::login');
 $routes->get('logout', 'AuthController::logout');
 
 // Dashboard spesifik per-role
-$routes->get('admin',  'DashboardController::admin', ['filter' => 'auth']);
-$routes->get('/admin/dashboard', 'DashboardController::dashboard', ['filter' => 'auth']);
-$routes->get('/admin/v_topup', 'DashboardController::v_topup', ['filter' => 'auth']);
-$routes->get('/admin/riwayat_pemesanan', 'DashboardController::riwayat_pemesanan', ['filter' => 'auth']);
-$routes->get('/admin/cek_pemesanan', 'DashboardController::cek_pemesanan', ['filter' => 'auth']);
-$routes->get('/admin/ulasan', 'ReviewController::index', ['filter' => 'auth']);
-$routes->post('/admin/ulasan/submit', 'ReviewController::submit', ['filter' => 'auth']); // TAMBAHKAN INI
+$routes->group('admin', ['filter' => 'auth'], function($routes) {
+    $routes->get('/', 'DashboardController::admin');
+    $routes->get('dashboard', 'DashboardController::dashboard');
+    $routes->get('v_topup', 'DashboardController::v_topup');
+    $routes->get('riwayat_pemesanan', 'DashboardController::riwayat_pemesanan');
+    $routes->get('download', 'DashboardController::download');
+    $routes->get('cek_pemesanan', 'DashboardController::cek_pemesanan');
+    $routes->get('ulasan', 'ReviewController::index');
+    $routes->post('ulasan/submit', 'ReviewController::submit');
+});
 
-$routes->get('user',   'DashboardController::user', ['filter' => 'auth']);
-$routes->get('/user/dashboard', 'DashboardController::dashboard', ['filter' => 'auth']);
-$routes->get('/user/v_topup', 'DashboardController::v_topup', ['filter' => 'auth']);
-$routes->get('/user/riwayat_pemesanan', 'DashboardController::riwayat_pemesanan', ['filter' => 'auth']);
-$routes->get('/user/cek_pemesanan', 'DashboardController::cek_pemesanan', ['filter' => 'auth']);
-$routes->get('/user/ulasan', 'ReviewController::index', ['filter' => 'auth']);
-$routes->post('/user/ulasan/submit', 'ReviewController::submit', ['filter' => 'auth']); // TAMBAHKAN INI
+$routes->group('user', ['filter' => 'auth'], function($routes) {
+    $routes->get('/', 'DashboardController::user');
+    $routes->get('dashboard', 'DashboardController::dashboard');
+    $routes->get('v_topup', 'DashboardController::v_topup');
+    $routes->get('riwayat_pemesanan', 'DashboardController::riwayat_pemesanan');
+    $routes->get('download', 'DashboardController::download');
+    $routes->get('cek_pemesanan', 'DashboardController::cek_pemesanan');
+    $routes->get('ulasan', 'ReviewController::index');
+    $routes->post('ulasan/submit', 'ReviewController::submit');
+});
 
 // Topup Routes
 $routes->get('/topup_ml/index', 'TopupMl::index');

@@ -95,6 +95,10 @@
                                 <a href="<?= base_url(session()->get('role') . '/v_topup') ?>" class="btn btn-warning fw-bold">
                                     <i class="fas fa-plus me-1"></i> Buat Pesanan Baru
                                 </a>
+                                <a href="<?= base_url(session()->get('role') . '/download') ?>" class="btn btn-warning fw-bold">
+                                    <i class="fas fa-plus me-1"></i>
+                                    <?= session()->get('role') === 'admin' ? 'Download Pemesanan Bulanan' : 'Download Riwayat Pemesanan Anda' ?>
+                                </a>
                             </div>
                         </div>
                         <p class="op-7 mb-4 text-black-50">Semua transaksi yang pernah Anda lakukan akan tercatat di sini.</p>
