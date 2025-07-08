@@ -24,7 +24,7 @@ $tahunSekarang = date('Y');
         <th>No</th>
         <th>id User</th>
         <th>id Server</th>
-        <th>Nominal</th>
+        <th>Jumlah Diamond</th>
         <th>Harga</th>
         <th>Metode Pembayaran</th>
         <th>Status Pembayaran</th>
@@ -40,7 +40,7 @@ $tahunSekarang = date('Y');
             <td><?= $row['user_id'] ?></td>
             <td><?= $row['server_id'] ?></td>
             <td><?= $row['nominal'] ?></td>
-            <td><?= "Rp " . number_format($row['harga'], 0, ",", ".") ?></td>
+            <td><?= "Rp " . number_format($row['harga_akhir'], 0, ",", ".") ?></td>
             <td><?= $row['metode_pembayaran'] ?></td>
             <td><?= $row['status_pembayaran'] ?></td>
             <td><?= date('Y-m-d H:i', strtotime($row['created_at'])) ?></td>
