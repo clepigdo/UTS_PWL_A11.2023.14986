@@ -43,7 +43,7 @@ $routes->group('topup_ml', function ($routes) {
     $routes->post('update/(:num)',    'TopupMl::update/$1');
     $routes->post('store',            'TopupMl::store');
     $routes->post('delete/(:num)',    'TopupMl::delete/$1');
-    $routes->get('getUsn', 'TopupMl::getUsn');
+    $routes->get('cekakun', 'TopupMl::cekAkun');
 });
 
 //Pembayaran Routes

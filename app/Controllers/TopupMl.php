@@ -10,7 +10,7 @@ class TopupMl extends BaseController
     protected $topupModel;
     protected $reviewModel; // Tambahkan properti untuk ReviewModel
     protected $client;
-    protected $merchant;
+    protected $merchantId;
     protected $signature;
 
     public function __construct()
@@ -18,7 +18,7 @@ class TopupMl extends BaseController
         $this->topupModel = new TopupModel();
         $this->reviewModel = new ReviewModel(); // Inisialisasi ReviewModel
         $this->client = new \GuzzleHttp\Client();
-        $this->merchant = env('APIGAMES_MERCHANT_ID');
+        $this->merchantId = env('APIGAMES_MERCHANT_ID');
         $this->signature = env('APIGAMES_SIGNATURE');
     }
 
@@ -208,5 +208,37 @@ class TopupMl extends BaseController
 
         // Redirect ke halaman list topup (sesuaikan URL-nya)
         return redirect()->to('topup_ml/index')->with('success', 'Data top-up berhasil dihapus.');
+    }
+    
+    public function cekAkun()
+    {
+        // 1. Ambil User ID dan Server ID dari request
+        $userId = $this->request->getGet('user_id');
+        $serverId = $this->request->getGet('server_id'); // <-- Ambil serverId
+        $gameCode = 'mobilelegend';
+
+        // Validasi
+        if (empty($userId) || empty($serverId)) {
+            return $this->response->setStatusCode(400)->setJSON(['error' => 'User ID dan Server ID tidak boleh kosong.']);
+        }
+
+        // 2. Gabungkan ID sesuai format yang diminta: user_id(server_id)
+        $combinedId = "{$userId}({$serverId})";
+
+        // 4. Bangun URL endpoint API menggunakan ID yang sudah digabung
+        $url = "https://v1.apigames.id/merchant/{$this->merchantId}/cek-username/{$gameCode}?user_id={$combinedId}&signature={$this->signature}";
+
+        try {
+            // ... sisa kode request Guzzle Anda tetap sama ...
+            $response = $this->client->request('GET', $url);
+            $body = $response->getBody()->getContents();
+            $result = json_decode($body, true);
+            return $this->response->setJSON($result);
+
+        } catch (\Exception $e) {
+            // ... sisa kode error handling Anda tetap sama ...
+            log_message('error', '[APIGames] Error: ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON(['error' => 'Terjadi kesalahan pada server kami.']);
+        }
     }
 }

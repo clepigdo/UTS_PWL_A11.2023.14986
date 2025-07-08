@@ -212,7 +212,7 @@
                                                 <span id="summary-harga" class="fw-bold">--</span>
                                             </div>
                                         </div>
-                                        <form action="<?= base_url('topup_ml/store') ?>" method="post">
+                                        <form id="topup-form" action="<?= base_url('topup_ml/store') ?>" method="post">
                                             <?= csrf_field() ?>
                                             <input type="hidden" id="selected-nominal" name="nominal">
 
@@ -225,6 +225,11 @@
                                             <div class="mb-3">
                                                 <label for="server_id" class="form-label">Server ID</label>
                                                 <input type="text" class="form-control bg-dark text-white border-secondary" id="server_id" name="server_id" placeholder="Masukkan Server ID (4-5 digit)" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Nickname</label>
+                                                <div id="hasilCekAkun" class="form-control bg-secondary text-white-75" style="min-height: 42px; display: flex; align-items: center;">
+                                                    </div>
                                             </div>
 
                                             <h5 class="mb-3 mt-4">3. Pilih Pembayaran</h5>
@@ -250,7 +255,7 @@
                                             </div>
 
                                             <div class="d-grid">
-                                                <button type="submit" class="btn btn-warning fw-bold">Top-Up Sekarang</button>
+                                                <button type="button" id="btn-konfirmasi-topup" class="btn btn-warning fw-bold">Top-Up Sekarang</button>
                                             </div>
                                         </form>
                                     </div>
@@ -558,6 +563,116 @@
                 fillColor: "rgba(255, 165, 52, .14)",
             });
         </script>
+
+<script>
+$(document).ready(function() {
+    // === Variabel Elemen ===
+    const $diamondCards = $('.diamond-card');
+    const $paymentCards = $('.payment-card');
+    const $inputUserId = $('#user_id');
+    const $inputServerId = $('#server_id'); // Variabel sudah ada
+    const $hasilDiv = $('#hasilCekAkun');
+    const $form = $('#topup-form');
+    const $btnKonfirmasi = $('#btn-konfirmasi-topup');
+
+    // ... (fungsi lain seperti updateSelection, selectPayment, formatRupiah) ...
+
+    /**
+     * FUNGSI TERPUSAT UNTUK MEMANGGIL API
+     * Diperbarui untuk menerima userId dan serverId
+     */
+    async function cekApiUsername(userId, serverId) {
+        // Kirim kedua ID ke controller sebagai parameter GET terpisah
+        const url = `<?= base_url('topup_ml/cekakun') ?>?user_id=${userId}&server_id=${serverId}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: 'Gagal memproses respons server.' }));
+            throw new Error(errorData.message || 'Terjadi kesalahan pada server.');
+        }
+        return await response.json();
+    }
+    
+    /**
+     * Fungsi yang akan dijalankan saat user selesai mengisi ID
+     */
+    async function jalankanPengecekan() {
+        const userId = $inputUserId.val();
+        const serverId = $inputServerId.val();
+
+        // Hanya jalankan pengecekan jika KEDUA field sudah diisi
+        if (!userId || !serverId) {
+            $hasilDiv.html(''); // Kosongkan jika salah satu field kosong
+            return;
+        }
+
+        $hasilDiv.html('Mengecek...').css('color', '#777');
+        try {
+            // Panggil API dengan kedua parameter
+            const data = await cekApiUsername(userId, serverId);
+            if (data.status === 1) {
+                $hasilDiv.html(`${data.data.username}`).css('color', '#28a745');
+            } else {
+                $hasilDiv.html(`${data.message || 'Akun tidak ditemukan.'}`).css('color', '#dc3545');
+            }
+        } catch (error) {
+            $hasilDiv.html(`${error.message}`).css('color', '#dc3545');
+        }
+    }
+
+    // === Event Handlers ===
+    
+    // Pasang event di kedua input ID
+    $inputUserId.on('blur', jalankanPengecekan);
+    $inputServerId.on('blur', jalankanPengecekan);
+
+
+    // Event saat tombol "Top-Up Sekarang" diklik (untuk konfirmasi akhir)
+    $btnKonfirmasi.on('click', async function() {
+        const userId = $inputUserId.val();
+        const serverId = $inputServerId.val();
+        const nominal = $('#selected-nominal').val();
+        const metodePembayaran = $('#metode_pembayaran').val();
+
+        if (!userId || !serverId || !nominal || !metodePembayaran) {
+            swal("Form Belum Lengkap", "Harap lengkapi semua data sebelum melanjutkan.", "warning");
+            return;
+        }
+
+        const originalButtonText = $btnKonfirmasi.html();
+        $btnKonfirmasi.html('<span class="spinner-border spinner-border-sm"></span> Memeriksa...').prop('disabled', true);
+
+        try {
+            // Panggil fungsi terpusat dengan kedua parameter
+            const data = await cekApiUsername(userId, serverId); 
+            
+            $btnKonfirmasi.html(originalButtonText).prop('disabled', false);
+
+            if (data.status === 1) {
+                swal({
+                    title: "Konfirmasi Pesanan",
+                    text: `Username Anda: ${data.data.username}\nApakah data sudah benar?`,
+                    icon: "info",
+                    buttons: {
+                        cancel: { text: "Batal", value: null, visible: true, className: "btn btn-danger" },
+                        confirm: { text: "Benar, Lanjutkan", value: true, visible: true, className: "btn btn-success" },
+                    },
+                }).then((lanjutkan) => {
+                    if (lanjutkan) {
+                        $form.submit(); // Submit form jika dikonfirmasi
+                    }
+                });
+            } else {
+                swal("ID Salah!", data.message || "ID yang Anda masukkan salah.", "error");
+            }
+        } catch (error) {
+            $btnKonfirmasi.html(originalButtonText).prop('disabled', false);
+            swal("Oops!", error.message || "Terjadi kesalahan saat menghubungi server.", "error");
+        }
+    });
+
+    // ... (sisa kode event handler Anda seperti $diamondCards.on('click',...)) ...
+});
+</script>
 </body>
 
 </html>
