@@ -40,8 +40,10 @@
                     <form action="<?= base_url('admin/cek_pemesanan') ?>" method="get">
                         <div class="form-group">
                             <label for="order_id">ID Pesanan</label>
-                            <input type="text" class="form-control" id="order_id" name="order_id" 
-                                placeholder="Masukkan ID Pesanan" value="<?= esc($input_order_id ?? '') ?>" required>
+                            <div class="input-group">
+                                <span class="input-group-text">CLEP-</span>
+                                <input type="text" class="form-control" id="order_id" name="order_id" placeholder="Masukkan ID Pesanan"value="<?= esc($input_order_id ?? '') ?>" required>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Cari Pesanan</button>
                     </form>
