@@ -51,3 +51,5 @@ $routes->group('payment', function ($routes) {
     $routes->get('process/(:num)',    'PaymentController::buatTransaksi/$1');
     $routes->post('notification',     'PaymentController::notification');
 });
+
+$routes->resource('api', ['controller' => 'apiController']);
